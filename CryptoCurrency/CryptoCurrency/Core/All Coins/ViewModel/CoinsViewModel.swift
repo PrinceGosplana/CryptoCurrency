@@ -18,6 +18,7 @@ final class CoinsViewModel: ObservableObject {
         Task { try await fetchCoins() }
     }
 
+    @MainActor
     func fetchCoins() async throws {
         coins = try await service.fetchCoins()
     }
