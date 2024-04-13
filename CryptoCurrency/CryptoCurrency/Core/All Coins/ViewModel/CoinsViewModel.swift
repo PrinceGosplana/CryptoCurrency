@@ -16,9 +16,13 @@ final class CoinsViewModel: ObservableObject {
     private let service = CoinDataService()
 
     init() {
-        fetchPrice(coin: "bitcoin")
+        fetchCoins()
     }
 
+    func fetchCoins() {
+        service.fetchCoins()
+    }
+    
     func fetchPrice(coin: String) {
         price = service.fetchPrice(coin: coin)
         self.coin = coin
