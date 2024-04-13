@@ -9,9 +9,7 @@ import SwiftUI
 
 final class CoinsViewModel: ObservableObject {
 
-    @Published var coin = ""
-    @Published var price = ""
-    @Published var errorMessage: String?
+    @Published var coins = [Coin]()
 
     private let service = CoinDataService()
 
@@ -20,11 +18,11 @@ final class CoinsViewModel: ObservableObject {
     }
 
     func fetchCoins() {
-        service.fetchCoins()
+        service.fetchCoins { coins in
+            DispatchQueue.main.async {
+                self.coins = coins
+            }
+        }
     }
-    
-    func fetchPrice(coin: String) {
-        price = service.fetchPrice(coin: coin)
-        self.coin = coin
-    }
+
 }

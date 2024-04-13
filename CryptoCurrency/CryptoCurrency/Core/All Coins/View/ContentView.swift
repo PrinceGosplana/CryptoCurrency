@@ -11,11 +11,11 @@ struct ContentView: View {
 
     @StateObject var viewModel = CoinsViewModel()
     var body: some View {
-        VStack {
-            Text("\(viewModel.coin): \(viewModel.price)")
-            Text("")
+        List {
+            ForEach(viewModel.coins) { coin in
+                Text(coin.name)
+            }
         }
-        .padding()
     }
 }
 
