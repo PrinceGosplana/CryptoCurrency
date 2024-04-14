@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct ContentView: View {
-
+    
     @StateObject var viewModel = CoinsViewModel()
     var body: some View {
         List {
@@ -16,20 +16,20 @@ struct ContentView: View {
                 HStack(spacing: 12) {
                     Text("\(coin.marketCapRank)")
                         .foregroundStyle(.gray)
-
+                    
                     VStack(alignment: .leading, spacing: 4) {
                         Text(coin.name)
                             .fontWeight(.semibold)
-
+                        
                         Text(coin.symbol.uppercased())
                     }
-                    .font(.footnote)
                 }
+                .font(.footnote)
             }
-            .overlay {
-                if let error = viewModel.errorMessage {
-                    Text(error)
-                }
+        }
+        .overlay {
+            if let error = viewModel.errorMessage {
+                Text(error)
             }
         }
     }
