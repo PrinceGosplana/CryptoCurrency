@@ -33,5 +33,28 @@ actor CoinDataService {
         }
     }
 
+    func fetchCoinDetails(id: String) async throws -> CoinDetails? {
+
+        let detailsUrlString = "https://api.coingecko.com/api/v3/coins/\(id)?localization=false"
+
+        guard let url = URL(string: detailsUrlString) else { throw CoinAPIError.invalidURL }
+
+        let (data, response) = try await URLSession.shared.data(from: url)
+
+        guard let httpResponse = response as? HTTPURLResponse else {
+            throw CoinAPIError.requestFailed(description: "Request failed")
+        }
+
+        guard httpResponse.statusCode == 200 else {
+            throw CoinAPIError.invalidStatusCode(statusCode: httpResponse.statusCode)
+        }
+
+        do {
+            let details = try JSONDecoder().decode(CoinDetails.self, from: data)
+            return details
+        } catch {
+            throw error as? CoinAPIError ?? .unknownError(error: error)
+        }
+    }
 }
 

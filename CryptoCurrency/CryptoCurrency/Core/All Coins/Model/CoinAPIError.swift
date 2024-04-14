@@ -8,6 +8,7 @@
 import Foundation
 
 enum CoinAPIError: Error {
+    case invalidURL
     case invalidData
     case jsonParsingFailure
     case requestFailed(description: String)
@@ -16,6 +17,7 @@ enum CoinAPIError: Error {
     
     var customDescription: String {
         switch self {
+        case .invalidURL: "Invalid URL"
         case .invalidData: "Invalid data"
         case .jsonParsingFailure: "Failed to parse JSON"
         case .requestFailed(let description): "Request failed \(description)"
