@@ -7,8 +7,12 @@
 
 import SwiftUI
 
+protocol CoinServiceProtocol {
+    func fetchCoins() async throws -> [Coin]
+    func fetchCoinDetails(id: String) async throws -> CoinDetails?
+}
 
-actor CoinDataService: HTTPDataDownloader {
+actor CoinDataService: CoinServiceProtocol, HTTPDataDownloader {
 
     func fetchCoins() async throws -> [Coin] {
         guard let endpoint = allCoinsURLString else {

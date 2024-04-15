@@ -12,9 +12,9 @@ final class CoinsViewModel: ObservableObject {
     @Published var coins = [Coin]()
     @Published var errorMessage: String?
 
-    private let service: CoinDataService
+    private let service: CoinServiceProtocol
 
-    init(service: CoinDataService) {
+    init(service: CoinServiceProtocol) {
         self.service = service
     }
 
