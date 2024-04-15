@@ -18,10 +18,16 @@ actor CoinDataService: HTTPDataDownloader {
     }
 
     func fetchCoinDetails(id: String) async throws -> CoinDetails? {
+
+        if let cached = CoinDetailCache.shared.get(forKey: id) {
+            return cached
+        }
         guard let endpoint = coinDetailRRLString(id: id) else {
             throw CoinAPIError.requestFailed(description: "Invalid Endpoint")
         }
-        return try await fetchData(as: CoinDetails.self, endpoint: endpoint)
+        let details = try await fetchData(as: CoinDetails.self, endpoint: endpoint)
+        CoinDetailCache.shared.set(details, forKey: id)
+        return details
     }
 
     // MARK: - Helpers -
