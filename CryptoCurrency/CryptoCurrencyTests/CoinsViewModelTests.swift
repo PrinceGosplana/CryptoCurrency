@@ -18,44 +18,49 @@ final class CoinsViewModelTests: XCTestCase {
     }
 
     func test_SuccessfulCoinsFetch() async {
-        let service = MockCoinService()
-        let viewModel = CoinsViewModel(service: service)
+        let sut = sut()
 
-        await viewModel.fetchCoins()
-        XCTAssertTrue(viewModel.coins.count > 0) // ensure that coins array has coins
-        XCTAssertEqual(viewModel.coins.count, 20) // ensure that all coins were decoded
+        await sut.fetchCoins()
 
-        XCTAssertEqual(viewModel.coins, viewModel.coins.sorted(by: { $0.marketCapRank < $1.marketCapRank }))
+        XCTAssertTrue(sut.coins.count > 0) // ensure that coins array has coins
+        XCTAssertEqual(sut.coins.count, 20) // ensure that all coins were decoded
+
+        XCTAssertEqual(sut.coins, sut.coins.sorted(by: { $0.marketCapRank < $1.marketCapRank }))
     }
 
     func test_CoinFetchWithInvalidJSON() async {
-        let service = MockCoinService()
-        service.mockData = mockCoin_invalidJSON
-        let viewModel = CoinsViewModel(service: service)
+        let sut = sut(mockData: mockCoin_invalidJSON)
 
-        await viewModel.fetchCoins()
+        await sut.fetchCoins()
 
-        XCTAssertTrue(viewModel.coins.isEmpty)
-        XCTAssertNotNil(viewModel.errorMessage)
+        XCTAssertTrue(sut.coins.isEmpty)
+        XCTAssertNotNil(sut.errorMessage)
     }
 
     func test_throwsInvalidDataError() async {
-        let service = MockCoinService()
-        service.mockError = CoinAPIError.invalidData
-        let viewModel = CoinsViewModel(service: service)
+        let sut = sut(mockError: CoinAPIError.invalidData)
 
-        await viewModel.fetchCoins()
-        XCTAssertNotNil(viewModel.errorMessage)
-        XCTAssertEqual(viewModel.errorMessage, CoinAPIError.invalidData.customDescription)
+        await sut.fetchCoins()
+
+        XCTAssertNotNil(sut.errorMessage)
+        XCTAssertEqual(sut.errorMessage, CoinAPIError.invalidData.customDescription)
     }
 
     func test_throwsInvalidStatusCode() async {
-        let service = MockCoinService()
-        service.mockError = CoinAPIError.invalidStatusCode(statusCode: 404)
-        let viewModel = CoinsViewModel(service: service)
 
-        await viewModel.fetchCoins()
-        XCTAssertNotNil(viewModel.errorMessage)
-        XCTAssertEqual(viewModel.errorMessage, CoinAPIError.invalidStatusCode(statusCode: 404).customDescription)
+        let sut = sut(mockError: CoinAPIError.invalidStatusCode(statusCode: 404))
+
+        await sut.fetchCoins()
+
+        XCTAssertNotNil(sut.errorMessage)
+        XCTAssertEqual(sut.errorMessage, CoinAPIError.invalidStatusCode(statusCode: 404).customDescription)
+    }
+
+    private func sut(mockData: Data? = nil, mockError: CoinAPIError? = nil) -> CoinsViewModel {
+        let service = MockCoinService()
+        service.mockData = mockData
+        service.mockError = mockError
+        let viewModel = CoinsViewModel(service: service)
+        return viewModel
     }
 }
