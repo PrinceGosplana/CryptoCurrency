@@ -20,17 +20,25 @@ struct CoinDetailsView: View {
     var body: some View {
         VStack(alignment: .leading) {
             if let details = viewModel.coinDetails {
-                Text(details.name)
-                    .fontWeight(.semibold)
-                    .font(.footnote)
+                HStack {
+                    Text(details.name)
+                        .fontWeight(.semibold)
+                        .font(.footnote)
 
-                Text(details.symbol.uppercased())
-                    .font(.footnote)
+                    Text(details.symbol.uppercased())
+                        .font(.footnote)
+
+                    Spacer()
+
+                    CoinImage(urlString: coin.image, size: 64)
+                }
 
                 Text(details.description.text)
                     .font(.footnote)
                     .padding(.vertical)
             }
+
+            Spacer()
         }
         .task {
             await viewModel.fetchCoinDetails()

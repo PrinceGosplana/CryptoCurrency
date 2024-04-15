@@ -26,6 +26,8 @@ struct ContentView: View {
                             Text("\(coin.marketCapRank)")
                                 .foregroundStyle(.gray)
 
+                            CoinImage(urlString: coin.image, size: 32)
+
                             VStack(alignment: .leading, spacing: 4) {
                                 Text(coin.name)
                                     .fontWeight(.semibold)
